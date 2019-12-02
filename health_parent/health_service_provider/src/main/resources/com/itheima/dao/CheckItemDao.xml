@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itheima.dao.CheckItemDao">
+
+    <insert id="add" parameterType="com.itheima.POJO.CheckItem">
+      insert into t_checkitem (code,name,sex,age,price,type,remark,attention)
+      values (#{code},#{name},#{sex},#{age},#{price},#{type},#{remark},#{attention})
+    </insert>
+    <update id="upDate">/*编辑修改，不是所有数据都修改，所以采用动态sql*/
+        update  t_checkitem
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="age != null">
+                age = #{age},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="attention != null">
+                attention = #{attention},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="deleteById">
+        delete from t_checkitem where id = #{id}
+    </delete>
+    <select id="findPage" resultType="com.itheima.POJO.CheckItem">/*查询条件有可能为空，如前台没有输入查询条件，我们就需要动态查询来判断*/
+    select *from t_checkitem
+        <if test="value !=null and value.length>0">
+            where code=#{value} or name=#{value}   /*前端条件输入可以是code项目编码或者项目名称*/
+        </if>
+    </select>
+    <select id="findCountByCheckItem" resultType="java.lang.Long">
+        select count(*) from t_checkgroup_checkitem where checkitem_id=#{checkitem_id}
+    </select>
+    <select id="findById" resultType="com.itheima.POJO.CheckItem">
+        select *from t_checkitem where id=#{id}
+    </select>
+    <select id="findAll" resultType="com.itheima.POJO.CheckItem">
+        select *from t_checkitem
+    </select>
+</mapper>

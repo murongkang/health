@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- 引入ElementUI样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <!-- 引入ElementUI组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+</head>
+<body>     <!--这里el选择器被封装过，在浏览器中会有class,所以样式写.  然后注意：当子元素中包含 <el-header> 或 <el-footer> 时，
+                                                                        全部子元素会垂直上下排列，否则会水平左右排列。-->
+    <div id="app">
+        <el-container>
+            <el-header>
+                header部分
+            </el-header>
+            <el-container>
+                <el-aside width="200px">
+                    aside部分
+                </el-aside>
+                <el-container>
+                    <el-main>
+                        main部分
+                    </el-main>
+                    <el-footer>
+                        footer部分
+                    </el-footer>
+                </el-container>
+            </el-container>
+        </el-container>
+    </div>
+    <style>
+        .el-header, .el-footer {
+            background-color: #B3C0D1;
+            color: #333;
+            text-align: left;
+            line-height: 60px;
+        }
+
+        .el-aside {
+            background-color: #D3DCE6;
+            color: #333;
+            text-align: center;
+            line-height: 200px;
+        }
+
+        .el-main {
+            background-color: #E9EEF3;
+            color: #333;
+            text-align: center;
+            line-height: 590px;
+        }
+    </style>
+    <script>
+        new Vue({
+            el:'#app'
+        });
+    </script>
+</body>
+</html>
