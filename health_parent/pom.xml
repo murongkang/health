@@ -173,6 +173,7 @@
                 <artifactId>jersey-client</artifactId>
                 <version>1.18.1</version>
             </dependency>
+            <!--七牛云存储图片文件依赖-->
             <dependency>
                 <groupId>com.qiniu</groupId>
                 <artifactId>qiniu-java-sdk</artifactId>

@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.itheima.POJO.CheckGroup;
 import com.itheima.POJO.CheckItem;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,4 +24,14 @@ public interface CheckGroupDao {  //记住创建接口的实现xml
     CheckGroup findById(Integer id);
 
 
+    List<Integer> findCheckItemIdsByCheckGroupId(Integer id);
+
+    void edit(CheckGroup checkGroup);
+
+    void deleteAssoication(Integer id);
+
+
+//    void findCountByCheckGroup(Integer id);
+
+    void deleteById(Integer id);
 }

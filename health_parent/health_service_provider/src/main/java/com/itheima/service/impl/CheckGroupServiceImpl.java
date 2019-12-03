@@ -37,14 +37,7 @@ public class CheckGroupServiceImpl implements CheckGroupService {
 
         //设置检查组和检查项的多对多关联关系，在操作中间表
         Integer checkGroupId = checkGroup.getId(); //获取检查组的id.
-        if (checkitemIds!=null&&checkitemIds.length>0){
-            for (Integer checkitemId : checkitemIds) {
-                Map<String, Integer> map = new HashMap<>();
-                map.put("checkGroup_Id",checkGroupId);
-                map.put("checkitem_Id",checkitemId);
-                checkGroupDao.setCheckGroupAndCheckItem(map);
-            }
-        }
+        this.setCheckGroupAndCheckItem(checkGroupId,checkitemIds);
     }
 
     //检查组分页
@@ -66,4 +59,43 @@ public class CheckGroupServiceImpl implements CheckGroupService {
     public CheckGroup findById(Integer id) {
        return   checkGroupDao.findById(id);
     }
+
+    @Override
+    public List<Integer> findCheckItemIdsByCheckGroupId(Integer id) {
+        return checkGroupDao.findCheckItemIdsByCheckGroupId(id);
+    }
+
+    //编辑修改检查组和检查项信息
+    @Override
+    public void edit(CheckGroup checkGroup, Integer[] checkitemIds) {
+        //修改检查组基本信息，操作检查组表
+        checkGroupDao.edit(checkGroup);
+        //清理当前检查组关联的检查项，操作中间关系表,(因为在修改复选框时，会发生变化，和原本绑定的值不同，所以要清理掉重新绑定）
+        checkGroupDao.deleteAssoication(checkGroup.getId());
+        //重新建立检查组和检查项的关联关系
+        //设置检查组和检查项的多对多关联关系，在操作中间表
+        Integer checkGroupId = checkGroup.getId(); //获取检查组的id.
+        this.setCheckGroupAndCheckItem(checkGroupId,checkitemIds);
+    }
+
+    //检查组删除
+    @Override
+    public void deleteById(Integer id) {
+//        checkGroupDao.findCountByCheckGroup(id);
+        checkGroupDao.deleteById(id);
+    }
+
+    //抽取方法
+    public void setCheckGroupAndCheckItem(Integer checkGroupId, Integer[] checkitemIds){
+        if (checkitemIds!=null&&checkitemIds.length>0){
+            for (Integer checkitemId : checkitemIds) {
+                Map<String, Integer> map = new HashMap<>();
+                map.put("checkGroup_Id",checkGroupId);
+                map.put("checkitem_Id",checkitemId);
+                checkGroupDao.setCheckGroupAndCheckItem(map);
+            }
+        }
+    }
+
+
 }

@@ -3,6 +3,7 @@ package com.itheima.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.itheima.POJO.CheckGroup;
 
+import com.itheima.POJO.CheckItem;
 import com.itheima.constant.MessageConstant;
 import com.itheima.entity.PageResult;
 import com.itheima.entity.QueryPageBean;
@@ -12,6 +13,9 @@ import com.itheima.service.CheckGroupService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
 
 /**
  * @author murongkang
@@ -56,17 +60,38 @@ public class CheckGroupController {
 
     }
 
- /*   //编辑弹框检查项回显数据
-    @RequestMapping("/findAll")
-    public Result findAll(){  //RequestBody解析前台提交过来的json数据，封装为指定对象
+    //编辑弹框检查项复选框回显
+    @RequestMapping("/findCheckItemIdsByCheckGroupId")
+    public Result findCheckItemIdsByCheckGroupId(Integer id){  //RequestBody解析前台提交过来的json数据，封装为指定对象
         try{
-            CheckGroup checkGroup=checkGroupService.findAll(); //服务调用成功
-            return new Result(true, MessageConstant.QUERY_CHECKGROUP_SUCCESS,checkGroup); //提示成功信息;
+            List<Integer> checkitemIds = checkGroupService.findCheckItemIdsByCheckGroupId(id); //服务调用成功
+            return new Result(true, MessageConstant.QUERY_CHECKGROUP_SUCCESS,checkitemIds); //提示成功信息;
         }catch (Exception e){
             e.printStackTrace();     //服务调用失败
             return new Result(false, MessageConstant.QUERY_CHECKGROUP_FAIL); //提示失败信息
         }
 
-    }*/
+    }
 
+    @RequestMapping("/edit")
+    public Result edit( @RequestBody CheckGroup checkGroup,Integer[] checkitemIds){
+        try{
+            checkGroupService.edit(checkGroup,checkitemIds); //服务调用成功
+        }catch (Exception e){
+            e.printStackTrace();     //服务调用失败
+            return new Result(false, MessageConstant.EDIT_CHECKITEM_FAIL); //提示编辑失败
+        }
+        return new Result(true, MessageConstant.EDIT_CHECKITEM_SUCCESS); //提示编辑成功
+    }
+    /*检查组点击删除方法*/
+    @RequestMapping("/deleteId")
+    public Result delete( Integer id){
+        try{
+            checkGroupService.deleteById(id); //服务调用成功
+        }catch (Exception e){
+            e.printStackTrace();     //服务调用失败
+            return new Result(false, MessageConstant.DELETE_CHECKITEM_FAIL); //提示删除失败
+        }
+        return new Result(true, MessageConstant.DELETE_CHECKITEM_SUCCESS); //提示删除成功
+    }
 }

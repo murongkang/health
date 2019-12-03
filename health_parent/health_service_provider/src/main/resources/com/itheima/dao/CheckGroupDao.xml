@@ -17,6 +17,37 @@
          values
         (#{checkGroup_Id},#{checkitem_Id})
     </insert>
+    <!--/*修改检查组信息，一定要用动态sql,因为不是每一个值都要修改*/-->
+    <update id="edit">
+        update t_checkgroup
+        <set>
+            <if test="name!=null">
+              name=#{name},
+            </if>
+            <if test="code!=null">
+                code=#{code},
+            </if>
+            <if test="sex!=null">
+                sex=#{sex},
+            </if>
+            <if test="helpCode!=null">
+                helpCode=#{helpCode},
+            </if>
+            <if test="attention!=null">
+                attention=#{attention},
+            </if>
+            <if test="remark!=null">
+                remark=#{remark},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <!--根据检查组id删除中间表数据（清理原有关联关系）-->
+    <delete id="deleteAssoication">
+       delete from t_checkgroup_checkitem where checkgroup_id = #{id}
+    </delete>
+
 
     <!--根据条件进行查询-->
     <select id="pageQuery" resultType="com.itheima.POJO.CheckGroup">
@@ -28,7 +59,15 @@
     <select id="findById" resultType="com.itheima.POJO.CheckGroup">
         select *from t_checkgroup where id=#{id}
     </select>
-
-
+    <select id="findCheckItemIdsByCheckGroupId" resultType="java.lang.Integer">
+        select checkitem_id from t_checkgroup_checkitem where checkgroup_id = #{id}  /*中间表关联查询*/
+    </select>
+   <!-- <delete id="findCountByCheckGroup">
+       delete from t_checkgroup_checkitem where checkgroup_id = #{id}
+    </delete>-->
+    <!--删除检查组-->
+    <delete id="deleteById">
+        delete from t_checkgroup where checkgroup_id = #{id}
+    </delete>
 
 </mapper>
