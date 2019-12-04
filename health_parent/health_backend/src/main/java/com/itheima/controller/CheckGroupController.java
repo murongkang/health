@@ -3,7 +3,6 @@ package com.itheima.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.itheima.POJO.CheckGroup;
 
-import com.itheima.POJO.CheckItem;
 import com.itheima.constant.MessageConstant;
 import com.itheima.entity.PageResult;
 import com.itheima.entity.QueryPageBean;
@@ -93,5 +92,18 @@ public class CheckGroupController {
             return new Result(false, MessageConstant.DELETE_CHECKITEM_FAIL); //提示删除失败
         }
         return new Result(true, MessageConstant.DELETE_CHECKITEM_SUCCESS); //提示删除成功
+    }
+
+    //查询检查组
+    @RequestMapping("/findAll")
+    public Result findAll(){
+        try{
+            List<CheckGroup> list=checkGroupService.findAll(); //服务调用成功  注意：查询要有返回值，就是把查到的数据赋值给list，在返回给Result封装的data
+            return new Result(true, MessageConstant.QUERY_CHECKGROUP_SUCCESS,list);
+        }catch (Exception e){
+            e.printStackTrace();     //服务调用失败
+            return new Result(false, MessageConstant.QUERY_CHECKGROUP_FAIL);
+        }
+
     }
 }

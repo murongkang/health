@@ -85,6 +85,12 @@ public class CheckGroupServiceImpl implements CheckGroupService {
         checkGroupDao.deleteById(id);
     }
 
+    @Override
+    public List<CheckGroup> findAll() {
+        return  checkGroupDao.findAll();
+
+    }
+
     //抽取方法
     public void setCheckGroupAndCheckItem(Integer checkGroupId, Integer[] checkitemIds){
         if (checkitemIds!=null&&checkitemIds.length>0){

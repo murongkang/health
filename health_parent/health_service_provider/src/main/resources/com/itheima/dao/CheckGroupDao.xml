@@ -62,9 +62,12 @@
     <select id="findCheckItemIdsByCheckGroupId" resultType="java.lang.Integer">
         select checkitem_id from t_checkgroup_checkitem where checkgroup_id = #{id}  /*中间表关联查询*/
     </select>
-   <!-- <delete id="findCountByCheckGroup">
-       delete from t_checkgroup_checkitem where checkgroup_id = #{id}
-    </delete>-->
+    <select id="findAll" resultType="com.itheima.POJO.CheckGroup">
+        select *from t_checkgroup;
+    </select>
+    <!-- <delete id="findCountByCheckGroup">
+        delete from t_checkgroup_checkitem where checkgroup_id = #{id}
+     </delete>-->
     <!--删除检查组-->
     <delete id="deleteById">
         delete from t_checkgroup where checkgroup_id = #{id}
