@@ -29,12 +29,12 @@
                 <el-breadcrumb-item>预约设置</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="app-container">
+        <div class="app-container" >
             <div class="box">
                 <div class="box ordersetting">
                     <el-card class="box-card">
                         <div class="boxMain">
-                            <el-button style="margin-bottom: 20px;margin-right: 20px" type="primary" @click="downloadTemplate()">模板下载</el-button>
+                            <el-button style="margin-bottom: 10px;margin-right: 10px" type="primary" @click="downloadTemplate()">模板下载</el-button>
                             <el-upload action="/ordersetting/upload.do"
                                        name="excelFile"
                                        :show-file-list="false"
@@ -140,6 +140,34 @@
             methods: {
 				//预约设置
                 handleOrderSet(day){
+                    //alert(this.formatDate(day.getFullYear(),day.getMonth()+1,day.getDate()));
+                    this.$prompt('请输入可预约人数', '预约设置', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        inputPattern: /^[0-9]*[1-9][0-9]*$/,
+                        inputErrorMessage: '只能输入正整数'
+                    }).then(({ value }) => {
+                        //发送ajax请求，将输入的数据提交到Controller
+                        axios.post("/ordersetting/editNumberByDate.do",{
+                            number:value,
+                            orderDate:this.formatDate(day.getFullYear(),day.getMonth()+1,day.getDate()) //日期 。getMonth：月份是从0开始
+                        }).then((res) => {
+                            if(res.data.flag){
+                                this.initData(this.formatDate(day.getFullYear(), day.getMonth() + 1, 1));
+                                this.$message({
+                                    type:'success',
+                                    message:res.data.message
+                                });
+                            }else{
+                                this.$message.error(res.data.message);
+                            }
+                        });
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '取消输入'
+                        });
+                    });
                 },
 				//上传之前进行文件格式校验
                 beforeUpload(file){
@@ -156,7 +184,7 @@
                 },
 				//下载模板文件
                 downloadTemplate(){
-                    window.location.href="../../template/ordersetting_template.xlsx";
+                    window.location.href="../../excel_template/ordersetting_template.xlsx";
                 },
 				//上传成功提示
                 handleSuccess(response, file) {
@@ -222,14 +250,24 @@
                             dayobject.index = index++;
                         this.days.push(dayobject);
                     }
-                    
-                    /*this.leftobj = [
+                /*    this.leftobj = [
                         { date: 1, number: 120, reservations: 1 },
                         { date: 3, number: 120, reservations: 1 },
                         { date: 4, number: 120, reservations: 120 },
                         { date: 6, number: 120, reservations: 1 },
                         { date: 8, number: 120, reservations: 1 }
                     ];*/
+
+                    //发送ajax请求，根据当前页面对应的月份查询预约设置信息
+                axios.post("/ordersetting/getOrderSettingByMonth.do?date="+this.currentYear+'-'+this.currentMonth).then((res)=>{   //这里调试时，页面数据没有查出：原因，参数年和月前后顺序写反了
+                            if (res.data.flag){
+                                this.leftobj=res.data.data;
+                            }else {
+                                this.$message.error(res.data.message);
+                            }
+                });
+
+
                 },
 				//切换到当前月份
                 goCurrentMonth: function (year, month) {
